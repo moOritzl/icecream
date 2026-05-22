@@ -2,11 +2,13 @@ import Database from 'better-sqlite3';
 import { randomUUID } from 'crypto';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = process.env.DATABASE_URL
   ?? join(__dirname, '../instance/icecream.db');
 
+mkdirSync(dirname(DB_PATH), { recursive: true });
 const db = new Database(DB_PATH);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
