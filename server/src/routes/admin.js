@@ -15,7 +15,7 @@ function requireAuth(req, res, next) {
 
 router.post('/login', async (req, res) => {
   const { password } = req.body ?? {};
-  const hash = process.env.ADMIN_PASSWORD_HASH ?? '';
+  const hash = (process.env.ADMIN_PASSWORD_HASH ?? '').trim();
   if (!hash || !password) return res.status(401).json({ error: 'unauthorized' });
 
   const ok = await bcrypt.compare(String(password), hash);
