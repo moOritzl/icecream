@@ -1,0 +1,8 @@
+node_modules/
+server/instance/
+server/.env
+client/dist/
+.superpowers/
+*.local
+.idea/
+design/Icecream/uploads/

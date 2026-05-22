@@ -1,0 +1,13 @@
+{
+  "name": "icecream",
+  "private": true,
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,green \"npm run dev -w icecream-server\" \"npm run dev -w icecream-client\"",
+    "build": "npm run build -w icecream-client",
+    "start": "NODE_ENV=production node server/src/index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
