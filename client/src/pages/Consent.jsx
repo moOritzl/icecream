@@ -28,7 +28,7 @@ export default function Consent() {
 
   const handleStart = () => {
     update({ consent: true });
-    navigate('/q/1');
+    navigate('/q/scoop');
   };
 
   return (

@@ -1,4 +1,6 @@
 node_modules/
+.agents/
+.claude/
 server/instance/
 server/.env
 client/dist/

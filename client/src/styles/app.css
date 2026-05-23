@@ -596,6 +596,23 @@ input, select, textarea { font-family: inherit; }
   .scoop-chart-panel { display: none; }
 }
 
+/* ── Survey hero split: chart left, question right ───────────────────────── */
+.survey-hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+  flex: 1;
+}
+@media (max-width: 620px) {
+  .survey-hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: unset;
+  }
+}
+
 /* ── Thanks 2-col layout ─────────────────────────────────────────────────── */
 .thanks-grid {
   display: grid;

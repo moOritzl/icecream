@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useDirection } from './hooks/useDirection.js';
 import Landing from './pages/Landing.jsx';
 import Consent from './pages/Consent.jsx';
-import ScoopQuestion from './pages/ScoopQuestion.jsx';
+import ScoopSurvey from './pages/ScoopSurvey.jsx';
 import OptionalGate from './pages/OptionalGate.jsx';
 import DessertAffinity from './pages/DessertAffinity.jsx';
 import FlavorChoice from './pages/FlavorChoice.jsx';
@@ -38,7 +38,7 @@ export default function App() {
         <Route path="/q/6" element={<DessertAffinity />} />
         <Route path="/q/7" element={<FlavorChoice />} />
         <Route path="/q/8" element={<PriceQuestion />} />
-        <Route path="/q/:step" element={<ScoopQuestion />} />
+        <Route path="/q/scoop" element={<ScoopSurvey />} />
         <Route path="/optional" element={<OptionalGate />} />
         <Route path="/thanks/:token" element={<Thanks />} />
         <Route path="/privacy" element={<Privacy />} />
