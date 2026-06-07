@@ -642,3 +642,29 @@ input, select, textarea { font-family: inherit; }
   letter-spacing: 0.14em;
   color: var(--ink-500);
 }
+
+/* ── Page enter transitions (CSS-only; replaces framer-motion) ───────────── */
+.page-enter {
+  width: 100%;
+  will-change: transform, opacity;
+}
+.page-enter-fade {
+  animation: page-fade-in 0.26s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.page-enter-slide {
+  animation: page-slide-in 0.28s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes page-slide-in {
+  from { opacity: 0; transform: translateX(36px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-fade,
+  .page-enter-slide {
+    animation: page-fade-in 0.15s ease both;
+  }
+}

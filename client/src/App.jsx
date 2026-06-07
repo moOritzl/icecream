@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { useDirection } from './hooks/useDirection.js';
 import Landing from './pages/Landing.jsx';
 import Consent from './pages/Consent.jsx';
@@ -30,22 +29,20 @@ export default function App() {
   useDirection(); // prime the direction ref on every route change
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Landing />} />
-        <Route path="/consent" element={<Consent />} />
-        {/* Specific optional-question routes ranked above :step wildcard */}
-        <Route path="/q/6" element={<DessertAffinity />} />
-        <Route path="/q/7" element={<FlavorChoice />} />
-        <Route path="/q/8" element={<PriceQuestion />} />
-        <Route path="/q/scoop" element={<ScoopSurvey />} />
-        <Route path="/optional" element={<OptionalGate />} />
-        <Route path="/thanks/:token" element={<Thanks />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AnimatePresence>
+    <Routes location={location} key={location.pathname}>
+      <Route path="/" element={<Landing />} />
+      <Route path="/consent" element={<Consent />} />
+      {/* Specific optional-question routes ranked above :step wildcard */}
+      <Route path="/q/6" element={<DessertAffinity />} />
+      <Route path="/q/7" element={<FlavorChoice />} />
+      <Route path="/q/8" element={<PriceQuestion />} />
+      <Route path="/q/scoop" element={<ScoopSurvey />} />
+      <Route path="/optional" element={<OptionalGate />} />
+      <Route path="/thanks/:token" element={<Thanks />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
