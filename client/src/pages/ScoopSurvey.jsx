@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ReferenceLine, ReferenceDot, ResponsiveContainer,
+  Tooltip, ReferenceLine, ReferenceDot,
 } from 'recharts';
 import { useSurvey } from '../SurveyContext.jsx';
 import MotionPage from '../components/MotionPage.jsx';
@@ -11,6 +11,31 @@ import { useDirection } from '../hooks/useDirection.js';
 
 const LABELS = ['1 scoop', '2 scoops', '3 scoops', '4 scoops', '5 scoops'];
 const CHART_MARGIN = { top: 28, right: 16, bottom: 20, left: 0 };
+
+// Measure a container element ourselves instead of using recharts'
+// <ResponsiveContainer>. ResponsiveContainer's internal ResizeObserver fires
+// while framer-motion is mid page-transition, measures a negative size
+// (width(-1)), and corrupts framer-motion's animation ref — an infinite rAF
+// loop that blanks the page. By passing fixed pixel dimensions to <LineChart>
+// and only rendering once we have a positive measurement, recharts never runs
+// an observer during the animation and the conflict disappears.
+function useElementSize(ref) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      if (w > 0 && h > 0) setSize(prev => (prev.width === w && prev.height === h ? prev : { width: w, height: h }));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return size;
+}
 
 function CompactSlider({ value, onChange, locked }) {
   const trackRef = useRef(null);
@@ -171,6 +196,7 @@ export default function ScoopSurvey() {
   const direction  = useDirection();
   const { answers, update } = useSurvey();
   const chartRef   = useRef(null);
+  const { width: chartW, height: chartH } = useElementSize(chartRef);
 
   // All scoops start at 100% so every dot is immediately visible and draggable.
   // "touched" tracks which ones the user has intentionally set.
@@ -181,7 +207,6 @@ export default function ScoopSurvey() {
   });
   const [touched,   setTouched]   = useState(() => new Set([0]));
   const [activeIdx, setActiveIdx] = useState(1);
-  const [exiting,   setExiting]   = useState(false);
 
   const allDone = touched.size === 5;
   const data    = drafts.map((pct, i) => ({ scoop: i + 1, pct }));
@@ -194,8 +219,7 @@ export default function ScoopSurvey() {
 
   const handleContinue = () => {
     update({ answers: [...drafts] });
-    setExiting(true);
-    requestAnimationFrame(() => navigate('/optional'));
+    navigate('/optional');
   };
 
   return (
@@ -228,30 +252,28 @@ export default function ScoopSurvey() {
               <span className="mono" style={{ fontSize: 11, color: 'var(--ink-500)' }}>% joy ÷ scoops</span>
             </div>
             <div ref={chartRef} style={{ height: 'clamp(240px, 40vh, 340px)', position: 'relative' }}>
-              {!exiting && (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={data} margin={CHART_MARGIN}>
-                    <CartesianGrid strokeDasharray="2 4" stroke="var(--vanilla-200)" vertical={false} />
-                    <ReferenceLine y={100} stroke="var(--pistachio-200)" strokeWidth={1.5} />
-                    <XAxis dataKey="scoop" tick={<XTick currentIdx={activeIdx} />}
-                      tickLine={false} axisLine={{ stroke: 'var(--ink-300)' }} interval={0}
-                      label={{ value: 'scoops', position: 'insideBottom', offset: -6,
-                        fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--ink-500)' }}
-                    />
-                    <YAxis domain={[0, 500]} allowDataOverflow ticks={[0, 100, 200, 300, 400, 500]}
-                      tick={<YAxisTick />} tickLine={false} axisLine={false} width={52} />
-                    <Tooltip content={<CustomTooltip />}
-                      cursor={{ stroke: 'var(--ink-300)', strokeWidth: 1, strokeDasharray: '2 3' }} />
-                    <ReferenceDot x={1} y={100} r={4}
-                      fill="var(--pistachio-200)" stroke="var(--pistachio-700)" strokeWidth={1.2} />
-                    <Line type="monotone" dataKey="pct"
-                      stroke="var(--strawberry-500)" strokeWidth={2.5}
-                      dot={<DraggableDot chartRef={chartRef} onDrag={setDraft} />}
-                      activeDot={false}
-                      isAnimationActive={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              {chartW > 0 && chartH > 0 && (
+                <LineChart width={chartW} height={chartH} data={data} margin={CHART_MARGIN}>
+                  <CartesianGrid strokeDasharray="2 4" stroke="var(--vanilla-200)" vertical={false} />
+                  <ReferenceLine y={100} stroke="var(--pistachio-200)" strokeWidth={1.5} />
+                  <XAxis dataKey="scoop" tick={<XTick currentIdx={activeIdx} />}
+                    tickLine={false} axisLine={{ stroke: 'var(--ink-300)' }} interval={0}
+                    label={{ value: 'scoops', position: 'insideBottom', offset: -6,
+                      fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--ink-500)' }}
+                  />
+                  <YAxis domain={[0, 500]} allowDataOverflow ticks={[0, 100, 200, 300, 400, 500]}
+                    tick={<YAxisTick />} tickLine={false} axisLine={false} width={52} />
+                  <Tooltip content={<CustomTooltip />}
+                    cursor={{ stroke: 'var(--ink-300)', strokeWidth: 1, strokeDasharray: '2 3' }} />
+                  <ReferenceDot x={1} y={100} r={4}
+                    fill="var(--pistachio-200)" stroke="var(--pistachio-700)" strokeWidth={1.2} />
+                  <Line type="monotone" dataKey="pct"
+                    stroke="var(--strawberry-500)" strokeWidth={2.5}
+                    dot={<DraggableDot chartRef={chartRef} onDrag={setDraft} />}
+                    activeDot={false}
+                    isAnimationActive={false}
+                  />
+                </LineChart>
               )}
             </div>
           </div>
