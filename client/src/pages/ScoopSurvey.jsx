@@ -181,6 +181,7 @@ export default function ScoopSurvey() {
   });
   const [touched,   setTouched]   = useState(() => new Set([0]));
   const [activeIdx, setActiveIdx] = useState(1);
+  const [exiting,   setExiting]   = useState(false);
 
   const allDone = touched.size === 5;
   const data    = drafts.map((pct, i) => ({ scoop: i + 1, pct }));
@@ -193,7 +194,8 @@ export default function ScoopSurvey() {
 
   const handleContinue = () => {
     update({ answers: [...drafts] });
-    navigate('/optional');
+    setExiting(true);
+    requestAnimationFrame(() => navigate('/optional'));
   };
 
   return (
@@ -225,30 +227,32 @@ export default function ScoopSurvey() {
               <span className="eyebrow">your enjoyment curve</span>
               <span className="mono" style={{ fontSize: 11, color: 'var(--ink-500)' }}>% joy ÷ scoops</span>
             </div>
-            <div ref={chartRef} style={{ flex: 1, minHeight: 'clamp(240px, 40vh, 340px)', position: 'relative' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data} margin={CHART_MARGIN}>
-                  <CartesianGrid strokeDasharray="2 4" stroke="var(--vanilla-200)" vertical={false} />
-                  <ReferenceLine y={100} stroke="var(--pistachio-200)" strokeWidth={1.5} />
-                  <XAxis dataKey="scoop" tick={<XTick currentIdx={activeIdx} />}
-                    tickLine={false} axisLine={{ stroke: 'var(--ink-300)' }} interval={0}
-                    label={{ value: 'scoops', position: 'insideBottom', offset: -6,
-                      fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--ink-500)' }}
-                  />
-                  <YAxis domain={[0, 500]} allowDataOverflow ticks={[0, 100, 200, 300, 400, 500]}
-                    tick={<YAxisTick />} tickLine={false} axisLine={false} width={52} />
-                  <Tooltip content={<CustomTooltip />}
-                    cursor={{ stroke: 'var(--ink-300)', strokeWidth: 1, strokeDasharray: '2 3' }} />
-                  <ReferenceDot x={1} y={100} r={4}
-                    fill="var(--pistachio-200)" stroke="var(--pistachio-700)" strokeWidth={1.2} />
-                  <Line type="monotone" dataKey="pct"
-                    stroke="var(--strawberry-500)" strokeWidth={2.5}
-                    dot={<DraggableDot chartRef={chartRef} onDrag={setDraft} />}
-                    activeDot={false}
-                    isAnimationActive={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            <div ref={chartRef} style={{ height: 'clamp(240px, 40vh, 340px)', position: 'relative' }}>
+              {!exiting && (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={data} margin={CHART_MARGIN}>
+                    <CartesianGrid strokeDasharray="2 4" stroke="var(--vanilla-200)" vertical={false} />
+                    <ReferenceLine y={100} stroke="var(--pistachio-200)" strokeWidth={1.5} />
+                    <XAxis dataKey="scoop" tick={<XTick currentIdx={activeIdx} />}
+                      tickLine={false} axisLine={{ stroke: 'var(--ink-300)' }} interval={0}
+                      label={{ value: 'scoops', position: 'insideBottom', offset: -6,
+                        fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fill: 'var(--ink-500)' }}
+                    />
+                    <YAxis domain={[0, 500]} allowDataOverflow ticks={[0, 100, 200, 300, 400, 500]}
+                      tick={<YAxisTick />} tickLine={false} axisLine={false} width={52} />
+                    <Tooltip content={<CustomTooltip />}
+                      cursor={{ stroke: 'var(--ink-300)', strokeWidth: 1, strokeDasharray: '2 3' }} />
+                    <ReferenceDot x={1} y={100} r={4}
+                      fill="var(--pistachio-200)" stroke="var(--pistachio-700)" strokeWidth={1.2} />
+                    <Line type="monotone" dataKey="pct"
+                      stroke="var(--strawberry-500)" strokeWidth={2.5}
+                      dot={<DraggableDot chartRef={chartRef} onDrag={setDraft} />}
+                      activeDot={false}
+                      isAnimationActive={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </div>
 
