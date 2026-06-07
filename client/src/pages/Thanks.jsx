@@ -113,14 +113,13 @@ export default function Thanks() {
               <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>You're the data</div>
             </div>
             <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', margin: '8px 0 8px' }}>
-              Thank you.<br />You're the&nbsp;data.
+              Here's your joy&nbsp;curve.
             </h1>
             {answers && (
               <p style={{ color: 'var(--ink-700)', fontSize: 16, lineHeight: 1.6, maxWidth: 440, margin: 0 }}>
-                Here's your enjoyment curve, plotted against the running average of
-                everyone before you.
+                Plotted against the running average of everyone before you.
                 {peakScoops && (
-                  <> Yours peaked at <b style={{ color: 'var(--strawberry-700)' }}>{peakScoops} scoop{peakScoops > 1 ? 's' : ''}</b>.</>
+                  <> Yours peaked at <b style={{ color: 'var(--strawberry-700)' }}>{peakScoops} {peakScoops === 1 ? 'scoop' : 'scoops'}</b>.</>
                 )}
               </p>
             )}
@@ -179,7 +178,7 @@ export default function Thanks() {
 
           <div className="card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8 }}>
-              <h3 style={{ margin: 0, fontSize: 16 }}>Your curve vs. everyone else</h3>
+              <h3 style={{ margin: 0, fontSize: 16 }}>Your joy curve vs. everyone else</h3>
               <div style={{ display: 'flex', gap: 14, fontSize: 12, alignItems: 'center' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <span style={{ width: 16, height: 3, background: 'var(--strawberry-500)', display: 'inline-block', borderRadius: 2 }} />

@@ -6,12 +6,14 @@ import ScoopCone from '../components/ScoopCone.jsx';
 import { useDirection } from '../hooks/useDirection.js';
 
 const OPTIONS = [
-  { id: 'vanilla',    label: 'Vanilla',        sub: 'plain, dignified, the control variable' },
-  { id: 'chocolate',  label: 'Chocolate',       sub: 'a classic, no notes' },
-  { id: 'pistachio',  label: 'Pistachio',       sub: 'we have a bias here' },
-  { id: 'strawberry', label: 'Strawberry',      sub: 'a real one, not pink' },
-  { id: 'mint_chip',  label: 'Mint chip',       sub: 'toothpaste-adjacent in the best way' },
-  { id: 'other',      label: 'Something else',  sub: 'tell us in one line' },
+  { id: 'vanilla',       label: 'Vanilla',       sub: 'plain, dignified, the control variable' },
+  { id: 'chocolate',     label: 'Chocolate',     sub: 'a classic, no notes' },
+  { id: 'stracciatella', label: 'Stracciatella', sub: 'chocolate shards in every bite' },
+  { id: 'strawberry',    label: 'Strawberry',    sub: 'a real one, not pink' },
+  { id: 'lemon',         label: 'Lemon',         sub: 'sharp, clean, polarizing' },
+  { id: 'yoghurt',       label: 'Yoghurt',       sub: 'mild and underrated' },
+  { id: 'cookie',        label: 'Cookie',        sub: 'crunchy bits, cream, chaos' },
+  { id: 'other',         label: 'Other',         sub: 'you know who you are' },
 ];
 
 export default function FlavorChoice() {
@@ -33,7 +35,7 @@ export default function FlavorChoice() {
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
           </div>
-          <div className="eyebrow">QUESTION 07 OF 08 · OPTIONAL</div>
+          <div className="eyebrow">QUESTION 2 OF 3 · OPTIONAL</div>
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 640, margin: '0 auto', width: '100%' }}>

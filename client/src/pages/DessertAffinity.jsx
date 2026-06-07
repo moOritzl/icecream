@@ -24,7 +24,7 @@ export default function DessertAffinity() {
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
           </div>
-          <div className="eyebrow">QUESTION 06 OF 08 · OPTIONAL</div>
+          <div className="eyebrow">QUESTION 1 OF 3 · OPTIONAL</div>
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 720, margin: '0 auto', width: '100%' }}>
@@ -58,7 +58,7 @@ export default function DessertAffinity() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10,
               fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-500)' }}>
               <span>1 · soup person</span>
-              <span>5 · neutral</span>
+              <span>5 · indifferent</span>
               <span>10 · dessert maximalist</span>
             </div>
           </div>

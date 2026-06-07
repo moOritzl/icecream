@@ -5,17 +5,25 @@ import MotionPage from '../components/MotionPage.jsx';
 import ScoopCone from '../components/ScoopCone.jsx';
 import { useDirection } from '../hooks/useDirection.js';
 
+const CURRENCIES = {
+  EUR: { symbol: '€', placeholder: '6.50' },
+  NOK: { symbol: 'kr', placeholder: '75' },
+  USD: { symbol: '$', placeholder: '7.50' },
+};
+
 export default function PriceQuestion() {
   const navigate = useNavigate();
   const direction = useDirection();
   const { maxPrice, answers, affinity, flavor, update, reset } = useSurvey();
   const [raw, setRaw] = useState(maxPrice != null ? String(maxPrice) : '');
+  const [currency, setCurrency] = useState('EUR');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  const { symbol, placeholder } = CURRENCIES[currency];
   const parsed = parseFloat(raw);
-  const isValid = !isNaN(parsed) && parsed >= 0 && parsed <= 500;
-  const rangeError = !isNaN(parsed) && parsed > 500;
+  const isValid = !isNaN(parsed) && parsed >= 0 && parsed <= 9999;
+  const rangeError = !isNaN(parsed) && parsed > 9999;
 
   const submit = async (price) => {
     setSubmitting(true);
@@ -26,6 +34,7 @@ export default function PriceQuestion() {
         affinity,
         flavor,
         maxPrice: price,
+        currency: price != null ? currency : null,
       };
       const res = await fetch('/api/submit', {
         method: 'POST',
@@ -60,22 +69,30 @@ export default function PriceQuestion() {
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
           </div>
-          <div className="eyebrow">QUESTION 08 OF 08 · OPTIONAL</div>
+          <div className="eyebrow">QUESTION 3 OF 3 · OPTIONAL</div>
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 560, margin: '0 auto', width: '100%' }}>
-          <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>Willingness to pay</div>
+          <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>what's your ceiling?</div>
           <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', margin: '8px 0 6px' }}>What's the most you'd pay for that ideal&nbsp;cone?</h1>
           <p style={{ fontSize: 15, color: 'var(--ink-700)', margin: 0 }}>
-            Pick the number of scoops that maximized your joy, then tell us the ceiling — what you'd pay at a nice indie shop.
+            One cone, all scoops included — what would you pay at a nice indie shop?
           </p>
 
           <div style={{ marginTop: 32 }}>
-            <label className="mono" style={{ fontSize: 11, color: 'var(--ink-500)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>
-              Maximum price
-            </label>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+              {Object.keys(CURRENCIES).map(c => (
+                <button key={c} onClick={() => setCurrency(c)} className="mono" style={{
+                  padding: '4px 12px', borderRadius: 999, fontSize: 12, cursor: 'pointer',
+                  border: c === currency ? '1.5px solid var(--ink-900)' : '1px solid var(--vanilla-300)',
+                  background: c === currency ? 'var(--ink-900)' : 'transparent',
+                  color: c === currency ? 'var(--vanilla-50)' : 'var(--ink-500)',
+                  transition: 'background 0.12s, color 0.12s',
+                }}>{c}</button>
+              ))}
+            </div>
             <div style={{
-              display: 'flex', alignItems: 'stretch', marginTop: 8,
+              display: 'flex', alignItems: 'stretch',
               borderRadius: 12, overflow: 'hidden',
               border: `1.5px solid ${rangeError ? 'var(--strawberry-700)' : 'var(--ink-900)'}`,
               background: 'var(--vanilla-100)',
@@ -85,12 +102,12 @@ export default function PriceQuestion() {
                 background: 'var(--vanilla-200)',
                 fontFamily: 'var(--font-mono)', fontSize: 18, color: 'var(--ink-700)',
                 display: 'flex', alignItems: 'center',
-              }}>USD $</span>
+              }}>{symbol}</span>
               <input
-                type="number" min="0" max="500" step="0.25"
+                type="number" min="0" max="9999" step="0.5"
                 value={raw}
                 onChange={e => setRaw(e.target.value)}
-                placeholder="8.50"
+                placeholder={placeholder}
                 style={{
                   flex: 1, border: 0, outline: 0, background: 'transparent',
                   padding: '14px 18px', fontFamily: 'var(--font-mono)',
@@ -104,13 +121,12 @@ export default function PriceQuestion() {
             </div>
             {rangeError ? (
               <div style={{ marginTop: 8, padding: '8px 12px', borderRadius: 8,
-                background: 'rgba(200,75,62,.08)', color: 'var(--strawberry-700)', fontSize: 13,
-                display: 'flex', alignItems: 'center', gap: 8 }}>
-                Please enter a value between $0 and $500.
+                background: 'rgba(200,75,62,.08)', color: 'var(--strawberry-700)', fontSize: 13 }}>
+                That seems high — please enter a realistic price.
               </div>
             ) : (
               <div className="caption" style={{ marginTop: 8 }}>
-                Median so far: <span className="mono" style={{ color: 'var(--ink-900)' }}>$7.25</span> · range $3–$22
+                Median so far: <span className="mono" style={{ color: 'var(--ink-900)' }}>€6.50</span> · range €3–€18
               </div>
             )}
             {error && (

@@ -320,7 +320,7 @@ export default function ScoopSurvey() {
           <button className="btn btn-primary" onClick={handleContinue}
             disabled={!allDone}
             style={!allDone ? { opacity: 0.45, cursor: 'default', pointerEvents: 'none' } : {}}>
-            See your curve →
+            Continue →
           </button>
         </div>
 
@@ -329,7 +329,6 @@ export default function ScoopSurvey() {
           fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-500)',
         }}>
           <span>drag the dots on the chart or use the sliders</span>
-          <span>~ 90 sec total</span>
         </footer>
 
       </div>

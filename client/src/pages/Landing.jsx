@@ -26,14 +26,14 @@ export default function Landing() {
           display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 60, alignItems: 'center',
         }} className="hero-grid">
           <div>
-            <div className="eyebrow">An ice-cream-flavored study</div>
+            <div className="eyebrow">sweet data</div>
             <h1 style={{ fontSize: 'clamp(40px, 6vw, 72px)', margin: '12px 0 18px', maxWidth: 540 }}>
-              How much is too&nbsp;much&nbsp;ice&nbsp;cream?
+              Find your sweet&nbsp;spot.
             </h1>
             <p style={{ fontSize: 19, color: 'var(--ink-700)', maxWidth: 480, lineHeight: 1.55, marginTop: 0 }}>
-              We're a small lab studying how additional scoops change the joy you
-              get from a dessert. Five sliders, ninety seconds, totally anonymous.
-              At the end, you'll see your personal "joy curve" against everyone else's.
+              A neuroscience student and a CS student disagree about the optimal
+              scoop count. Help us settle it. Five sliders, ninety seconds, totally
+              anonymous — and you'll get your personal joy curve at the end.
             </p>
 
             <div style={{ display: 'flex', gap: 12, marginTop: 32, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -58,7 +58,7 @@ export default function Landing() {
             />
             <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic',
               fontSize: 18, color: 'var(--ink-700)', marginTop: 8, textAlign: 'center' }}>
-              "the third scoop is a different animal"
+              "scoop three is where things get complicated."
             </div>
             <div className="mono" style={{ fontSize: 11, color: 'var(--ink-500)', marginTop: 4 }}>
               — n = 1,284 respondents, so far
