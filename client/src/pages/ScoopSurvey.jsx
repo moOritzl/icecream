@@ -197,7 +197,7 @@ export default function ScoopSurvey() {
   };
 
   return (
-    <MotionPage direction={direction} variant="slide">
+    <MotionPage direction={direction} variant="fade">
       <div style={{ minHeight: '100dvh', padding: '24px', display: 'flex', justifyContent: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 1200 }}>
 
