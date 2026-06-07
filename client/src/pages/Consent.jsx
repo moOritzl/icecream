@@ -59,7 +59,7 @@ export default function Consent() {
               style={{ display: 'none' }} />
             <span style={{
               flex: '0 0 22px', width: 22, height: 22, marginTop: 2,
-              borderRadius: 6, border: `2px solid ${checked ? 'var(--pistachio-700)' : 'var(--ink-400)'}`,
+              borderRadius: 6, border: `2px solid ${checked ? 'var(--pistachio-700)' : 'var(--ink-300)'}`,
               background: checked ? 'var(--pistachio-500)' : 'transparent',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.15s, border-color 0.15s',

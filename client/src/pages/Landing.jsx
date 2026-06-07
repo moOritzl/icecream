@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import MotionPage from '../components/MotionPage.jsx';
 import ScoopCone from '../components/ScoopCone.jsx';
 import { useDirection } from '../hooks/useDirection.js';
+import scoopsPerson from '../assets/scoops-person.svg';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -50,7 +51,11 @@ export default function Landing() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <ScoopCone size={320} scoops={3} />
+            <img
+              src={scoopsPerson}
+              alt="Person enjoying a large ice cream cone"
+              style={{ width: '100%', maxWidth: 340, height: 'auto' }}
+            />
             <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic',
               fontSize: 18, color: 'var(--ink-700)', marginTop: 8, textAlign: 'center' }}>
               "the third scoop is a different animal"

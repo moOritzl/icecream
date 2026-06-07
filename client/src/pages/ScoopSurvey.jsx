@@ -169,7 +169,7 @@ function XTick({ x, y, payload, currentIdx = 0 }) {
 export default function ScoopSurvey() {
   const navigate   = useNavigate();
   const direction  = useDirection();
-  const { answers, setAnswer } = useSurvey();
+  const { answers, update } = useSurvey();
   const chartRef   = useRef(null);
 
   // All scoops start at 100% so every dot is immediately visible and draggable.
@@ -192,7 +192,7 @@ export default function ScoopSurvey() {
   };
 
   const handleContinue = () => {
-    drafts.forEach((v, i) => setAnswer(i, v));
+    update({ answers: [...drafts] });
     navigate('/optional');
   };
 

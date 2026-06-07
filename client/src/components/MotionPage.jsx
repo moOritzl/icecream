@@ -12,7 +12,7 @@ const fadeVariants = {
   exit: { opacity: 0, y: -8 },
 };
 
-const spring = { type: 'spring', stiffness: 300, damping: 30 };
+const spring = { type: 'tween', duration: 0.28, ease: [0.4, 0, 0.2, 1] };
 const fadeTrans = { duration: 0.22, ease: 'easeOut' };
 
 export default function MotionPage({ children, direction = 1, variant = 'slide', style }) {
