@@ -73,7 +73,6 @@ export default function PriceQuestion() {
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 560, margin: '0 auto', width: '100%' }}>
-          <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>what's your ceiling?</div>
           <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', margin: '8px 0 6px' }}>What's the most you'd pay for that ideal&nbsp;cone?</h1>
           <p style={{ fontSize: 15, color: 'var(--ink-700)', margin: 0 }}>
             One cone, all scoops included — what would you pay at a nice indie shop?

@@ -26,7 +26,6 @@ export default function Landing() {
           display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 60, alignItems: 'center',
         }} className="hero-grid">
           <div>
-            <div className="eyebrow">sweet data</div>
             <h1 style={{ fontSize: 'clamp(40px, 6vw, 72px)', margin: '12px 0 18px', maxWidth: 540 }}>
               Find your sweet&nbsp;spot.
             </h1>

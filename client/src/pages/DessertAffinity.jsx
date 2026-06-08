@@ -28,7 +28,6 @@ export default function DessertAffinity() {
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 720, margin: '0 auto', width: '100%' }}>
-          <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>Sweet tooth, calibrated</div>
           <h1 style={{ fontSize: 'clamp(28px, 4vw, 48px)', margin: '8px 0 6px' }}>How much of a dessert person are&nbsp;you?</h1>
           <p style={{ fontSize: 15, color: 'var(--ink-700)', margin: 0, maxWidth: 540 }}>
             1 = "I'd rather have soup." 10 = "Dessert first, dinner if there's time."

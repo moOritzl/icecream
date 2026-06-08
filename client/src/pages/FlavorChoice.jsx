@@ -6,14 +6,14 @@ import ScoopCone from '../components/ScoopCone.jsx';
 import { useDirection } from '../hooks/useDirection.js';
 
 const OPTIONS = [
-  { id: 'vanilla',       label: 'Vanilla',       sub: 'plain, dignified, the control variable' },
-  { id: 'chocolate',     label: 'Chocolate',     sub: 'a classic, no notes' },
-  { id: 'stracciatella', label: 'Stracciatella', sub: 'chocolate shards in every bite' },
-  { id: 'strawberry',    label: 'Strawberry',    sub: 'a real one, not pink' },
-  { id: 'lemon',         label: 'Lemon',         sub: 'sharp, clean, polarizing' },
-  { id: 'yoghurt',       label: 'Yoghurt',       sub: 'mild and underrated' },
-  { id: 'cookie',        label: 'Cookie',        sub: 'crunchy bits, cream, chaos' },
-  { id: 'other',         label: 'Other',         sub: 'you know who you are' },
+  { id: 'vanilla',       label: 'Vanilla' },
+  { id: 'chocolate',     label: 'Chocolate' },
+  { id: 'stracciatella', label: 'Stracciatella' },
+  { id: 'strawberry',    label: 'Strawberry' },
+  { id: 'lemon',         label: 'Lemon' },
+  { id: 'yoghurt',       label: 'Yoghurt' },
+  { id: 'cookie',        label: 'Cookie' },
+  { id: 'other',         label: 'Other' },
 ];
 
 export default function FlavorChoice() {
@@ -39,7 +39,6 @@ export default function FlavorChoice() {
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 640, margin: '0 auto', width: '100%' }}>
-          <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>Flavor allegiance</div>
           <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', margin: '8px 0 6px' }}>If forced to pick&nbsp;one.</h1>
           <p style={{ fontSize: 15, color: 'var(--ink-700)', margin: 0 }}>One only. Don't be diplomatic.</p>
 
@@ -48,7 +47,7 @@ export default function FlavorChoice() {
               const isSel = o.id === selected;
               return (
                 <label key={o.id} style={{
-                  display: 'flex', gap: 12, alignItems: 'flex-start',
+                  display: 'flex', gap: 12, alignItems: 'center',
                   padding: 16, borderRadius: 12, cursor: 'pointer',
                   background: isSel ? 'var(--pistachio-50)' : 'var(--vanilla-100)',
                   border: isSel ? '1.5px solid var(--pistachio-700)' : '1px solid var(--vanilla-200)',
@@ -57,17 +56,14 @@ export default function FlavorChoice() {
                   <input type="radio" name="flavor" value={o.id} checked={isSel}
                     onChange={() => setSelected(o.id)} style={{ display: 'none' }} />
                   <span style={{
-                    flex: '0 0 20px', width: 20, height: 20, marginTop: 2, borderRadius: 999,
+                    flex: '0 0 20px', width: 20, height: 20, borderRadius: 999,
                     border: `2px solid ${isSel ? 'var(--pistachio-700)' : 'var(--ink-500)'}`,
                     background: isSel ? 'var(--pistachio-500)' : 'transparent',
                     position: 'relative', flexShrink: 0,
                   }}>
                     {isSel && <div style={{ position: 'absolute', inset: 4, borderRadius: 999, background: 'white' }} />}
                   </span>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 500, color: 'var(--ink-900)' }}>{o.label}</div>
-                    <div style={{ fontSize: 13, color: 'var(--ink-500)' }}>{o.sub}</div>
-                  </div>
+                  <div style={{ fontWeight: 500, color: 'var(--ink-900)' }}>{o.label}</div>
                 </label>
               );
             })}

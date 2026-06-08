@@ -108,10 +108,7 @@ export default function Thanks() {
         <div style={{ display: 'grid', gridTemplateColumns: 'var(--thanks-grid-cols, 1fr 1.1fr)', gap: 40, marginTop: 24, flex: 1, alignItems: 'center' }}
           className="thanks-grid">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 4 }}>
-              <ThankYouMark size={56} />
-              <div className="eyebrow" style={{ color: 'var(--strawberry-700)' }}>You're the data</div>
-            </div>
+            <ThankYouMark size={56} style={{ marginBottom: 4 }} />
             <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', margin: '8px 0 8px' }}>
               Here's your joy&nbsp;curve.
             </h1>
