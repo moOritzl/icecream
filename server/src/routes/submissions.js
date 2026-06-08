@@ -3,14 +3,14 @@ import { createSubmission, deleteSubmission, getMeanCurve } from '../db.js';
 
 const router = Router();
 
-const VALID_FLAVORS = new Set(['vanilla', 'chocolate', 'pistachio', 'strawberry', 'mint_chip', 'other']);
+const VALID_FLAVORS = new Set(['vanilla', 'chocolate', 'pistachio', 'strawberry', 'mint_chip', 'stracciatella', 'lemon', 'yoghurt', 'cookie', 'other']);
 const VALID_AGES    = new Set(['<18', '18-24', '25-34', '35-44', '45-54', '55-64', '65+']);
 const VALID_GENDERS = new Set(['woman', 'man', 'nonbinary', 'self_describe']);
 
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
 router.post('/submit', (req, res) => {
-  const { answers, affinity, flavor, maxPrice, ageBucket, gender, country } = req.body ?? {};
+  const { answers, affinity, flavor, maxPrice, currency, ageBucket, gender, country } = req.body ?? {};
 
   if (!Array.isArray(answers) || answers.length !== 5) {
     return res.status(400).json({ error: 'answers must be an array of 5 numbers' });
@@ -31,8 +31,8 @@ router.post('/submit', (req, res) => {
   }
 
   const cleanPrice = maxPrice != null ? Number(maxPrice) : null;
-  if (cleanPrice != null && (isNaN(cleanPrice) || cleanPrice < 0 || cleanPrice > 500)) {
-    return res.status(400).json({ error: 'maxPrice must be 0–500' });
+  if (cleanPrice != null && (isNaN(cleanPrice) || cleanPrice < 0 || cleanPrice > 9999)) {
+    return res.status(400).json({ error: 'maxPrice must be 0–9999' });
   }
 
   const cleanAge    = ageBucket && VALID_AGES.has(ageBucket)    ? ageBucket : null;
@@ -45,6 +45,7 @@ router.post('/submit', (req, res) => {
       affinity: cleanAffinity,
       flavor: cleanFlavor,
       maxPrice: cleanPrice,
+      currency: typeof currency === 'string' ? currency : null,
       ageBucket: cleanAge,
       gender: cleanGender,
       country: cleanCountry,

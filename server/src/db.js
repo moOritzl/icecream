@@ -26,12 +26,16 @@ db.exec(`
     ice_cream_affinity   INTEGER,
     flavor_preference    TEXT,
     max_price_usd        REAL,
+    currency             TEXT,
     age_bucket           TEXT,
     gender               TEXT,
     country              TEXT,
     is_likely_bot        INTEGER NOT NULL DEFAULT 0
   )
 `);
+
+// Migrate existing DBs that predate the currency column
+try { db.exec('ALTER TABLE submissions ADD COLUMN currency TEXT'); } catch {}
 
 function isLikelyBot(scoops) {
   // Flag if the five values are exactly the linear defaults
@@ -45,20 +49,22 @@ function todayISO() {
 
 // ── Public ──────────────────────────────────────────────────────────────────
 
+const VALID_CURRENCIES = new Set(['EUR', 'USD', 'NOK']);
+
 const insertStmt = db.prepare(`
   INSERT INTO submissions
     (id, created_at, consent_given,
      scoop_1_pct, scoop_2_pct, scoop_3_pct, scoop_4_pct, scoop_5_pct,
-     ice_cream_affinity, flavor_preference, max_price_usd,
+     ice_cream_affinity, flavor_preference, max_price_usd, currency,
      age_bucket, gender, country, is_likely_bot)
   VALUES
     (@id, @created_at, 1,
      @scoop_1_pct, @scoop_2_pct, @scoop_3_pct, @scoop_4_pct, @scoop_5_pct,
-     @ice_cream_affinity, @flavor_preference, @max_price_usd,
+     @ice_cream_affinity, @flavor_preference, @max_price_usd, @currency,
      @age_bucket, @gender, @country, @is_likely_bot)
 `);
 
-export function createSubmission({ answers, affinity, flavor, maxPrice, ageBucket, gender, country }) {
+export function createSubmission({ answers, affinity, flavor, maxPrice, currency, ageBucket, gender, country }) {
   const id = randomUUID();
   const scoops = answers.map(Number);
   insertStmt.run({
@@ -72,6 +78,7 @@ export function createSubmission({ answers, affinity, flavor, maxPrice, ageBucke
     ice_cream_affinity: affinity ?? null,
     flavor_preference:  flavor  ?? null,
     max_price_usd:      maxPrice != null ? Number(maxPrice) : null,
+    currency:           maxPrice != null && VALID_CURRENCIES.has(currency) ? currency : null,
     age_bucket: ageBucket ?? null,
     gender:     gender    ?? null,
     country:    country   ?? null,
