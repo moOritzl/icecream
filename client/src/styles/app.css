@@ -350,6 +350,203 @@ input, select, textarea { font-family: inherit; }
 }
 .mc-option.selected .mc-radio-dot { display: block; }
 
+/* ── Flavor choice cards (per-flavor color + animation) ──────────────────── */
+.flavor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-2);
+}
+@media (max-width: 600px) { .flavor-grid { grid-template-columns: 1fr; } }
+
+.flavor-card {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 14px 16px;
+  min-height: 58px;
+  border-radius: var(--r-3);
+  border: 1.5px solid var(--vanilla-200);
+  background: var(--vanilla-100);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s, border-color 0.25s;
+}
+.flavor-card.selected {
+  border-color: var(--flavor-border);
+  background: var(--flavor-bg);
+}
+
+.flavor-radio {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-300);
+  position: relative;
+  z-index: 3;
+  transition: border-color 0.2s, background 0.2s;
+}
+.flavor-card.selected .flavor-radio {
+  border-color: var(--flavor-accent);
+  background: var(--flavor-accent);
+}
+.flavor-radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.flavor-card.selected .flavor-radio::after { opacity: 1; }
+
+.flavor-label {
+  flex: 1;
+  z-index: 3;
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+.flavor-card.selected .flavor-label { color: var(--flavor-text); }
+
+/* Floating icon — springs in from the right, then gently bobs */
+.flavor-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateX(34px) rotate(-12deg) scale(0.7);
+  transition: transform 0.5s cubic-bezier(0.34, 1.6, 0.5, 1), opacity 0.3s ease;
+}
+.flavor-card.selected .flavor-icon {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0) rotate(0deg) scale(1);
+}
+.flavor-icon svg { display: block; }
+.flavor-card.selected .flavor-icon svg {
+  animation: flavor-bob 2.8s ease-in-out 0.5s infinite;
+}
+@keyframes flavor-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-2px) rotate(2deg); }
+}
+
+/* Vanilla — cream drip from the top edge */
+.flavor-drip {
+  position: absolute;
+  right: 18px; top: -2px;
+  width: 11px; height: 26px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #EFD480, #FBEDA8);
+  border-radius: 0 0 8px 8px;
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.4s cubic-bezier(0.34, 1.6, 0.5, 1);
+}
+.flavor-drip::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #EFD480;
+}
+.flavor-card.selected .flavor-drip { transform: scaleY(1); }
+
+/* Yoghurt — milky sweep across the card */
+.flavor-milk {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: linear-gradient(108deg, rgba(255,255,255,0.85) 0%, rgba(220,230,255,0.55) 100%);
+  transform: translateX(-110%) skewX(-7deg);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.flavor-card.selected .flavor-milk { transform: translateX(10%) skewX(-7deg); }
+
+/* Strawberry — soft pink bloom behind the berry */
+.flavor-bloom {
+  position: absolute;
+  right: 6px; top: 50%;
+  z-index: 1;
+  pointer-events: none;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFB8CE 0%, rgba(255,150,180,0) 70%);
+  opacity: 0;
+  transform: translateY(-50%) scale(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.6, 0.5, 1), opacity 0.3s;
+}
+.flavor-card.selected .flavor-bloom { opacity: 1; transform: translateY(-50%) scale(1.9); }
+
+/* Stracciatella — chocolate chips scatter */
+.flavor-chip {
+  position: absolute;
+  z-index: 2;
+  width: 7px; height: 4px;
+  border-radius: 1.5px;
+  background: #4A2E12;
+  opacity: 0;
+  transform: scale(0) rotate(var(--rot));
+}
+.flavor-card.selected .flavor-chip {
+  animation: flavor-chip-in var(--dur) var(--delay) cubic-bezier(0.34, 1.6, 0.5, 1) forwards;
+}
+@keyframes flavor-chip-in {
+  0%   { opacity: 0; transform: scale(0) rotate(var(--rot)); }
+  65%  { opacity: 1; transform: scale(1.2) rotate(var(--rot)); }
+  100% { opacity: 0.9; transform: scale(1) rotate(var(--rot)); }
+}
+
+/* Cookie — crumbs scatter out */
+.flavor-crumb {
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  background: var(--flavor-accent);
+  opacity: 0;
+  transform: scale(0);
+}
+.flavor-card.selected .flavor-crumb {
+  animation: flavor-crumb-out var(--dur) var(--delay) cubic-bezier(0.34, 1.6, 0.5, 1) forwards;
+}
+@keyframes flavor-crumb-out {
+  0%   { opacity: 1; transform: scale(0) translate(0, 0); }
+  60%  { opacity: 1; transform: scale(1) translate(var(--tx), var(--ty)); }
+  100% { opacity: 0.55; transform: scale(0.6) translate(var(--tx), var(--ty)); }
+}
+
+/* Honor reduced-motion: keep the color change, drop the motion */
+@media (prefers-reduced-motion: reduce) {
+  .flavor-icon,
+  .flavor-drip,
+  .flavor-milk,
+  .flavor-bloom,
+  .flavor-chip,
+  .flavor-crumb {
+    transition: opacity 0.2s ease;
+  }
+  .flavor-card.selected .flavor-icon {
+    transform: translateY(-50%);
+  }
+  .flavor-card.selected .flavor-icon svg,
+  .flavor-card.selected .flavor-chip,
+  .flavor-card.selected .flavor-crumb {
+    animation: none;
+  }
+  .flavor-card.selected .flavor-drip { transform: scaleY(1); }
+  .flavor-card.selected .flavor-milk { transform: translateX(10%) skewX(-7deg); }
+  .flavor-card.selected .flavor-bloom { transform: translateY(-50%) scale(1.9); }
+  .flavor-card.selected .flavor-chip,
+  .flavor-card.selected .flavor-crumb { opacity: 0.85; transform: scale(1); }
+}
+
 /* ── Price input ──────────────────────────────────────────────────────────── */
 .price-input-wrap {
   display: flex;
