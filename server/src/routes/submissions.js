@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createSubmission, deleteSubmission, getMeanCurve } from '../db.js';
+import { createSubmission, deleteSubmission, getMeanCurve, getPriceStats } from '../db.js';
 
 const router = Router();
 
@@ -8,6 +8,22 @@ const VALID_AGES    = new Set(['<18', '18-24', '25-34', '35-44', '45-54', '55-64
 const VALID_GENDERS = new Set(['woman', 'man', 'nonbinary', 'self_describe']);
 
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+const TO_USD = { EUR: 1 / 0.92, NOK: 1 / 10.5, USD: 1 };
+
+function toUsd(amount, currency) {
+  const rate = TO_USD[currency] ?? 1;
+  return Math.round(amount * rate * 100) / 100;
+}
+
+router.get('/count', (_req, res) => {
+  const { total } = getMeanCurve();
+  res.json({ total });
+});
+
+router.get('/price-stats', (_req, res) => {
+  res.json(getPriceStats());
+});
 
 router.post('/submit', (req, res) => {
   const { answers, affinity, flavor, maxPrice, currency, ageBucket, gender, country } = req.body ?? {};
@@ -34,6 +50,8 @@ router.post('/submit', (req, res) => {
   if (cleanPrice != null && (isNaN(cleanPrice) || cleanPrice < 0 || cleanPrice > 9999)) {
     return res.status(400).json({ error: 'maxPrice must be 0–9999' });
   }
+  const cleanCurrency = typeof currency === 'string' && TO_USD[currency] ? currency : 'USD';
+  const priceUsd = cleanPrice != null ? toUsd(cleanPrice, cleanCurrency) : null;
 
   const cleanAge    = ageBucket && VALID_AGES.has(ageBucket)    ? ageBucket : null;
   const cleanGender = gender    && VALID_GENDERS.has(gender)    ? gender    : null;
@@ -44,8 +62,8 @@ router.post('/submit', (req, res) => {
       answers: scoops,
       affinity: cleanAffinity,
       flavor: cleanFlavor,
-      maxPrice: cleanPrice,
-      currency: typeof currency === 'string' ? currency : null,
+      maxPrice: priceUsd,
+      currency: cleanPrice != null ? cleanCurrency : null,
       ageBucket: cleanAge,
       gender: cleanGender,
       country: cleanCountry,

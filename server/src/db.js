@@ -166,6 +166,20 @@ export function deleteSubmissionAdmin(token) {
   return r.changes > 0;
 }
 
+export function getPriceStats() {
+  const rows = db.prepare(
+    'SELECT max_price_usd FROM submissions WHERE max_price_usd IS NOT NULL AND is_likely_bot = 0 ORDER BY max_price_usd'
+  ).all().map(r => r.max_price_usd);
+  if (!rows.length) return { median: null, p10: null, p90: null, count: 0 };
+  const pct = (p) => rows[Math.min(Math.floor(rows.length * p), rows.length - 1)];
+  return {
+    median: Math.round(pct(0.5) * 100) / 100,
+    p10:    Math.round(pct(0.1) * 100) / 100,
+    p90:    Math.round(pct(0.9) * 100) / 100,
+    count:  rows.length,
+  };
+}
+
 export function getMeanCurve() {
   const row = db.prepare(`
     SELECT

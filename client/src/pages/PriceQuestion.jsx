@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSurvey } from '../SurveyContext.jsx';
 import MotionPage from '../components/MotionPage.jsx';
@@ -6,9 +6,9 @@ import ScoopCone from '../components/ScoopCone.jsx';
 import { useDirection } from '../hooks/useDirection.js';
 
 const CURRENCIES = {
-  EUR: { symbol: '€', placeholder: '6.50' },
-  NOK: { symbol: 'kr', placeholder: '75' },
-  USD: { symbol: '$', placeholder: '7.50' },
+  EUR: { symbol: '€', placeholder: '6.50', rate: 0.92 },
+  NOK: { symbol: 'kr', placeholder: '75',  rate: 10.5 },
+  USD: { symbol: '$', placeholder: '7.50', rate: 1 },
 };
 
 export default function PriceQuestion() {
@@ -19,6 +19,14 @@ export default function PriceQuestion() {
   const [currency, setCurrency] = useState('EUR');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [priceStats, setPriceStats] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/price-stats')
+      .then(r => r.json())
+      .then(d => setPriceStats(d))
+      .catch(() => {});
+  }, []);
 
   const { symbol, placeholder } = CURRENCIES[currency];
   const parsed = parseFloat(raw);
@@ -125,7 +133,14 @@ export default function PriceQuestion() {
               </div>
             ) : (
               <div className="caption" style={{ marginTop: 8 }}>
-                Median so far: <span className="mono" style={{ color: 'var(--ink-900)' }}>€6.50</span> · range €3–€18
+                {priceStats?.count > 0 ? (() => {
+                  const { rate, symbol } = CURRENCIES[currency];
+                  const fmt = (usd) => {
+                    const v = usd * rate;
+                    return symbol + (v >= 10 ? Math.round(v) : v.toFixed(2));
+                  };
+                  return <>Median so far: <span className="mono" style={{ color: 'var(--ink-900)' }}>{fmt(priceStats.median)}</span> · range {fmt(priceStats.p10)}–{fmt(priceStats.p90)}</>;
+                })() : 'Enter what feels right for a nice indie shop.'}
               </div>
             )}
             {error && (

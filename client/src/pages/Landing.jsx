@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MotionPage from '../components/MotionPage.jsx';
 import ScoopCone from '../components/ScoopCone.jsx';
@@ -17,6 +18,14 @@ function TrustCheck() {
 export default function Landing() {
   const navigate = useNavigate();
   const direction = useDirection();
+  const [total, setTotal] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/count')
+      .then(r => r.json())
+      .then(d => setTotal(d.total))
+      .catch(() => {});
+  }, []);
 
   return (
     <MotionPage direction={direction} variant="fade">
@@ -46,7 +55,11 @@ export default function Landing() {
             <img className="lh-illus" src={scoopsPerson}
               alt="Person enjoying a large ice cream cone" />
             <p className="lh-quote">"scoop three is where things get complicated."</p>
-            <div className="lh-n">n = 1,284 respondents, so far</div>
+            <div className="lh-n">
+              {total != null
+                ? `n = ${total.toLocaleString()} respondents, so far`
+                : 'loading respondents…'}
+            </div>
           </div>
 
           <div className="lh-cta lh-reveal" style={{ '--i': 3 }}>
