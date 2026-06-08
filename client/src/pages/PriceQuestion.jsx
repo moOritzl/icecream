@@ -63,8 +63,8 @@ export default function PriceQuestion() {
 
   return (
     <MotionPage direction={direction} variant="slide">
-      <div className="scoop-screen" style={{ padding: 36, display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="scoop-screen survey-page">
+        <header className="survey-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>

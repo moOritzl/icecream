@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from 'react';
+import { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSurvey } from '../SurveyContext.jsx';
 import MotionPage from '../components/MotionPage.jsx';
@@ -10,6 +10,38 @@ const LABELS = ['1 scoop', '2 scoops', '3 scoops', '4 scoops', '5 scoops'];
 // Plot insets (px): room for Y labels on the left, X labels + axis title below.
 const PLOT = { top: 28, right: 16, bottom: 30, left: 52 };
 const Y_TICKS = [0, 100, 200, 300, 400, 500];
+
+// Read-only preview (mobile) auto-fits the Y axis so a flat all-100% default
+// doesn't render as a line pinned to the bottom fifth of an empty 0–500 frame.
+// The interactive chart keeps the full 0–500 range so drag math is unchanged.
+const CEILING_STEPS = [150, 200, 250, 300, 350, 400, 450, 500];
+function computeCeiling(drafts) {
+  const max = Math.max(100, ...drafts.map((v) => (Number.isFinite(v) ? v : 0)));
+  return CEILING_STEPS.find((s) => s >= max * 1.15) ?? 500;
+}
+function ticksFor(ceiling) {
+  const step = ceiling <= 200 ? 50 : 100;
+  const out = [];
+  for (let t = 0; t <= ceiling; t += step) out.push(t);
+  if (!out.includes(100)) out.push(100); // always show the 100% baseline
+  return out.sort((a, b) => a - b);
+}
+
+// Track a media query so the chart can switch between interactive (desktop)
+// and read-only preview (mobile, where the sliders are the primary input).
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
+  );
+  useEffect(() => {
+    const m = window.matchMedia(query);
+    const onChange = () => setMatches(m.matches);
+    onChange();
+    m.addEventListener('change', onChange);
+    return () => m.removeEventListener('change', onChange);
+  }, [query]);
+  return matches;
+}
 
 // Measure a container element. We render the chart as plain SVG (see JoyChart)
 // rather than recharts: recharts 3.x runs an internal ResizeObserver that, when
@@ -38,12 +70,16 @@ function useElementSize(ref) {
 
 // Hand-rolled enjoyment-curve chart. Five points (one per scoop count); points
 // 2–5 are draggable vertically to set their % joy. Pure SVG, no chart library.
-function JoyChart({ width, height, drafts, activeIdx, chartRef, onDrag }) {
+function JoyChart({ width, height, drafts, activeIdx, chartRef, onDrag, readOnly = false }) {
+  // Interactive chart spans the full 0–500 range; the read-only preview
+  // auto-fits so the default flat curve fills the frame instead of hugging 0.
+  const ceiling = readOnly ? computeCeiling(drafts) : 500;
+  const yTicks = readOnly ? ticksFor(ceiling) : Y_TICKS;
   const plotW = Math.max(0, width - PLOT.left - PLOT.right);
   const plotH = Math.max(0, height - PLOT.top - PLOT.bottom);
   const baseY = PLOT.top + plotH;
   const xAt = (i) => PLOT.left + (plotW * i) / 4;
-  const yAt = (pct) => PLOT.top + plotH * (1 - Math.max(0, Math.min(500, pct)) / 500);
+  const yAt = (pct) => PLOT.top + plotH * (1 - Math.max(0, Math.min(ceiling, pct)) / ceiling);
 
   const points = drafts.map((pct, i) => ({
     i, pct,
@@ -81,9 +117,10 @@ function JoyChart({ width, height, drafts, activeIdx, chartRef, onDrag }) {
   const MONO = 'JetBrains Mono, monospace';
 
   return (
-    <svg width={width} height={height} style={{ display: 'block', touchAction: 'none' }}>
+    <svg width={width} height={height}
+      style={{ display: 'block', touchAction: readOnly ? 'pan-y' : 'none' }}>
       {/* Horizontal gridlines + Y labels. 100% is the solid pistachio baseline. */}
-      {Y_TICKS.map((t) => {
+      {yTicks.map((t) => {
         const y = yAt(t);
         const base = t === 100;
         return (
@@ -123,7 +160,7 @@ function JoyChart({ width, height, drafts, activeIdx, chartRef, onDrag }) {
                 fill={locked ? 'var(--pistachio-700)' : 'var(--strawberry-700)'}
                 style={{ pointerEvents: 'none', userSelect: 'none' }}>{p.pct}%</text>
             )}
-            {!locked && (
+            {!locked && !readOnly && (
               <circle cx={p.x} cy={p.y} r={20} fill="transparent"
                 style={{ cursor: 'ns-resize' }} onPointerDown={startDrag(p.i)} />
             )}
@@ -208,6 +245,10 @@ export default function ScoopSurvey() {
   const { answers, update } = useSurvey();
   const chartRef   = useRef(null);
   const { width: chartW, height: chartH } = useElementSize(chartRef);
+  // On phones the sliders are the primary input; the chart becomes a read-only
+  // preview so the same five values aren't entered twice (and a vertical drag
+  // over the chart no longer fights the page scroll).
+  const isMobile = useMediaQuery('(max-width: 620px)');
 
   // All scoops start at 100% so every dot is immediately visible and draggable.
   // "touched" tracks which ones the user has intentionally set.
@@ -234,14 +275,11 @@ export default function ScoopSurvey() {
 
   return (
     <MotionPage direction={direction} variant="fade">
-      <div style={{ minHeight: '100dvh', padding: '24px', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 1200 }}>
+      <div className="survey-page">
+      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 1200, margin: '0 auto' }}>
 
         {/* Header */}
-        <header style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          marginBottom: 20, flexShrink: 0,
-        }}>
+        <header className="survey-header" style={{ marginBottom: 20, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <ScoopCone size={32} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
@@ -261,10 +299,11 @@ export default function ScoopSurvey() {
               <span className="eyebrow">your enjoyment curve</span>
               <span className="mono" style={{ fontSize: 11, color: 'var(--ink-500)' }}>% joy ÷ scoops</span>
             </div>
-            <div ref={chartRef} style={{ height: 'clamp(240px, 40vh, 340px)', position: 'relative' }}>
+            <div ref={chartRef} style={{ height: isMobile ? 200 : 'clamp(240px, 40vh, 340px)', position: 'relative' }}>
               {chartW > 0 && chartH > 0 && (
                 <JoyChart width={chartW} height={chartH} drafts={drafts}
-                  activeIdx={activeIdx} chartRef={chartRef} onDrag={setDraft} />
+                  activeIdx={activeIdx} chartRef={chartRef} onDrag={setDraft}
+                  readOnly={isMobile} />
               )}
             </div>
           </div>
@@ -274,7 +313,7 @@ export default function ScoopSurvey() {
 
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-300)',
               textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-              or use the sliders
+              {isMobile ? 'set each scoop' : 'or use the sliders'}
             </div>
 
             {LABELS.map((label, i) => {
@@ -315,7 +354,14 @@ export default function ScoopSurvey() {
         </div>
 
         {/* Navigation */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
+        {!allDone && (
+          <div style={{ marginTop: 20, textAlign: 'right',
+            fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink-700)' }}>
+            {touched.size} of 5 set — set each scoop to continue
+          </div>
+        )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginTop: allDone ? 20 : 8, gap: 12 }}>
           <button className="btn btn-quiet" onClick={() => navigate('/consent')}>← back</button>
           <button className="btn btn-primary" onClick={handleContinue}
             disabled={!allDone}
@@ -328,7 +374,7 @@ export default function ScoopSurvey() {
           marginTop: 16, display: 'flex', justifyContent: 'space-between',
           fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-500)',
         }}>
-          <span>drag the dots on the chart or use the sliders</span>
+          <span>{isMobile ? 'use the sliders to set how each scoop count feels' : 'drag the dots on the chart or use the sliders'}</span>
         </footer>
 
       </div>

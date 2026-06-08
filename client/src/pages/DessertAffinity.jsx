@@ -18,8 +18,8 @@ export default function DessertAffinity() {
 
   return (
     <MotionPage direction={direction} variant="slide">
-      <div className="scoop-screen" style={{ padding: 36, display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="scoop-screen survey-page">
+        <header className="survey-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
@@ -34,15 +34,16 @@ export default function DessertAffinity() {
           </p>
 
           <div style={{ marginTop: 44 }}>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="affinity-row">
               {Array.from({ length: 10 }, (_, i) => {
                 const n = i + 1;
                 const isSel = n === selected;
                 return (
                   <button key={n}
                     onClick={() => setSelected(n)}
+                    aria-pressed={isSel}
                     style={{
-                      flex: 1, height: 60, borderRadius: 12,
+                      height: 52, borderRadius: 12,
                       border: isSel ? '2px solid var(--ink-900)' : '1px solid var(--vanilla-200)',
                       background: isSel ? 'var(--pistachio-500)' : 'var(--vanilla-100)',
                       color: isSel ? 'white' : 'var(--ink-900)',

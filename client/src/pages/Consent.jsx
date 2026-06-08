@@ -33,7 +33,7 @@ export default function Consent() {
 
   return (
     <MotionPage direction={direction} variant="fade">
-      <div className="scoop-screen" style={{ padding: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100dvh' }}>
+      <div className="scoop-screen survey-page" style={{ alignItems: 'center' }}>
         <div style={{ maxWidth: 560, width: '100%' }}>
           <div className="eyebrow">Before we start</div>
           <h1 style={{ fontSize: 48, margin: '12px 0 8px' }}>The fine print, kept short.</h1>

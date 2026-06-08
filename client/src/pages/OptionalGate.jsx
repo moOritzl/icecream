@@ -9,10 +9,7 @@ export default function OptionalGate() {
 
   return (
     <MotionPage direction={direction} variant="fade">
-      <div className="scoop-screen" style={{
-        padding: 48, display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center', minHeight: '100dvh',
-      }}>
+      <div className="scoop-screen survey-page" style={{ alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ maxWidth: 580, width: '100%', textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Glyph kind="cherry" size={56} color="var(--strawberry-700)" />

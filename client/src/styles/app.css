@@ -45,6 +45,30 @@ input, select, textarea { font-family: inherit; }
   flex-direction: column;
 }
 
+/* ── Survey page shell (shared root + header across all survey screens) ───── */
+/* One place for responsive gutters and the iOS safe-area inset, so individual
+   pages stop hand-rolling padding: 24/36/48 and bottom controls clear the
+   Safari toolbar / home indicator. */
+.survey-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 5vw, 48px);
+  padding-bottom: max(clamp(20px, 5vw, 48px), env(safe-area-inset-bottom));
+}
+.survey-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  flex-wrap: wrap;
+}
+/* When the header wraps on narrow screens, keep the eyebrow right-aligned. */
+.survey-header > :last-child {
+  margin-left: auto;
+  text-align: right;
+}
+
 /* ── Header ──────────────────────────────────────────────────────────────── */
 .site-header {
   padding: var(--s-4) var(--s-6);
@@ -306,6 +330,17 @@ input, select, textarea { font-family: inherit; }
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-500);
+}
+
+/* Dessert-affinity 1–10 row: ten across on desktop, two rows of five on phones
+   so each button clears a comfortable tap target instead of ~26px. */
+.affinity-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: var(--s-2);
+}
+@media (max-width: 480px) {
+  .affinity-row { grid-template-columns: repeat(5, 1fr); }
 }
 
 /* ── Multiple choice options ─────────────────────────────────────────────── */
@@ -730,46 +765,150 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* ── Landing hero ────────────────────────────────────────────────────────── */
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: var(--s-16);
-  align-items: center;
+/* Mobile-first: one centered vertical narrative (headline → lead → illustration
+   → CTA → trust). The illustration is an anchored centerpiece, not a marooned
+   afterthought. Desktop re-flows into the asymmetric split via grid-areas. */
+.landing-hero {
   flex: 1;
-  padding: var(--s-10) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 22px);
+  padding: clamp(4px, 2vw, 18px) 0;
 }
-@media (max-width: 768px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: var(--s-8);
-  }
-  .hero-illustration { order: -1; }
+
+.lh-headline {
+  font-size: clamp(44px, 12vw, 58px);
+  line-height: 1.0;
+  margin: 0;
+  max-width: 13ch;
 }
-.hero-title {
-  font-size: 68px;
-  margin: var(--s-3) 0 var(--s-5);
-  max-width: 560px;
-}
-@media (max-width: 900px) { .hero-title { font-size: 48px; } }
-.hero-lead {
-  font-size: 19px;
+.lh-lead {
+  font-size: 17px;
   color: var(--ink-700);
-  max-width: 480px;
-  line-height: 1.55;
+  line-height: 1.5;
+  max-width: 44ch;
+  margin: 0;
 }
-.hero-btns {
+
+.lh-art {
+  position: relative;
+  align-self: center;
   display: flex;
-  gap: var(--s-3);
-  margin-top: var(--s-8);
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  width: 100%;
+  margin: 0;
 }
-.hero-trust {
+/* soft pistachio halo gives the illustration a place to sit */
+.lh-art::before {
+  content: '';
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  width: min(78vw, 340px);
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(127, 168, 89, 0.17), rgba(127, 168, 89, 0) 72%);
+  z-index: 0;
+  pointer-events: none;
+}
+.lh-illus {
+  position: relative;
+  z-index: 1;
+  width: min(48vw, 200px);
+  height: auto;
+}
+.lh-quote {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-700);
+  margin: 10px 0 0;
+  max-width: 26ch;
+  line-height: 1.3;
+}
+.lh-n {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-500);
+  margin-top: 5px;
+}
+
+.lh-cta {
   display: flex;
-  gap: var(--s-7);
-  margin-top: var(--s-9);
+  flex-direction: column;
+}
+.lh-cta .btn-primary {
+  width: 100%;
+  padding: 17px 28px;
+  font-size: 16px;
+  justify-content: center;
+}
+
+.lh-trust {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
   font-size: 13px;
   color: var(--ink-700);
+}
+.lh-trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Staggered entrance + gentle float on the illustration. */
+.lh-reveal {
+  opacity: 0;
+  animation: lh-rise 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 60ms);
+}
+@keyframes lh-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.lh-illus { animation: lh-float 5.5s ease-in-out 1.1s infinite; }
+@keyframes lh-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lh-reveal { animation: none; opacity: 1; }
+  .lh-illus { animation: none; }
+}
+
+/* Desktop: asymmetric split — text left, illustration anchored right + centered. */
+@media (min-width: 768px) {
+  .landing-hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-areas:
+      "headline art"
+      "lead     art"
+      "cta      art"
+      "trust    art";
+    column-gap: clamp(40px, 6vw, 72px);
+    row-gap: 16px;
+    align-content: center;
+    justify-items: start;
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .lh-headline { grid-area: headline; align-self: end; font-size: clamp(52px, 5vw, 72px); max-width: 12ch; }
+  .lh-lead     { grid-area: lead; font-size: 19px; }
+  .lh-cta      { grid-area: cta; }
+  .lh-cta .btn-primary { width: auto; }
+  .lh-trust    { grid-area: trust; align-self: start; gap: 24px; }
+  .lh-art      { grid-area: art; align-self: center; margin: 0; }
+  .lh-illus    { width: 100%; max-width: 300px; max-height: 320px; object-fit: contain; }
 }
 
 /* ── Question header ─────────────────────────────────────────────────────── */

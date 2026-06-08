@@ -94,8 +94,8 @@ export default function Thanks() {
 
   return (
     <MotionPage direction={direction} variant="fade">
-      <div className="scoop-screen grain" style={{ padding: 40, display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className="scoop-screen grain survey-page">
+        <header className="survey-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
