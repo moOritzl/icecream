@@ -332,15 +332,11 @@ input, select, textarea { font-family: inherit; }
   color: var(--ink-500);
 }
 
-/* Dessert-affinity 1–10 row: ten across on desktop, two rows of five on phones
-   so each button clears a comfortable tap target instead of ~26px. */
+/* Dessert-affinity 1–10 row: always one line — a scale shouldn't wrap. */
 .affinity-row {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: var(--s-2);
-}
-@media (max-width: 480px) {
-  .affinity-row { grid-template-columns: repeat(5, 1fr); }
 }
 
 /* ── Multiple choice options ─────────────────────────────────────────────── */
@@ -953,8 +949,8 @@ input, select, textarea { font-family: inherit; }
 .thanks-grid {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  gap: 40px;
-  align-items: center;
+  gap: clamp(24px, 5vw, 40px);
+  align-items: start;
 }
 @media (max-width: 820px) {
   .thanks-grid { grid-template-columns: 1fr; }

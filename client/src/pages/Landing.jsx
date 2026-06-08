@@ -27,7 +27,7 @@ export default function Landing() {
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
           </div>
           <div className="mono" style={{ fontSize: 11, color: 'var(--ink-500)' }}>
-            a neuroscience study · since 2026
+            a neuroscience study
           </div>
         </header>
 

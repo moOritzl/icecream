@@ -12,7 +12,7 @@ export default function PageShell({ children, eyebrow, style }) {
         {eyebrow && <div className="eyebrow" style={{ fontSize: 11 }}>{eyebrow}</div>}
         {!eyebrow && (
           <div className="mono" style={{ fontSize: 11, color: 'var(--ink-500)' }}>
-            a neuroscience study · since 2026
+            a neuroscience study
           </div>
         )}
       </header>

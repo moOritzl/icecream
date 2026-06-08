@@ -105,7 +105,7 @@ export default function Thanks() {
           )}
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'var(--thanks-grid-cols, 1fr 1.1fr)', gap: 40, marginTop: 24, flex: 1, alignItems: 'center' }}
+        <div style={{ marginTop: 24, flex: 1 }}
           className="thanks-grid">
           <div>
             <ThankYouMark size={56} style={{ marginBottom: 4 }} />
