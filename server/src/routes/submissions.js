@@ -63,6 +63,7 @@ router.post('/submit', (req, res) => {
       affinity: cleanAffinity,
       flavor: cleanFlavor,
       maxPrice: priceUsd,
+      maxPriceOriginal: cleanPrice,
       currency: cleanPrice != null ? cleanCurrency : null,
       ageBucket: cleanAge,
       gender: cleanGender,

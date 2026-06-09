@@ -26,6 +26,7 @@ db.exec(`
     ice_cream_affinity   INTEGER,
     flavor_preference    TEXT,
     max_price_usd        REAL,
+    max_price_original   REAL,
     currency             TEXT,
     age_bucket           TEXT,
     gender               TEXT,
@@ -36,6 +37,7 @@ db.exec(`
 
 // Migrate existing DBs that predate the currency column
 try { db.exec('ALTER TABLE submissions ADD COLUMN currency TEXT'); } catch {}
+try { db.exec('ALTER TABLE submissions ADD COLUMN max_price_original REAL'); } catch {}
 
 function isLikelyBot(scoops) {
   // Flag if the five values are exactly the linear defaults
@@ -55,18 +57,19 @@ const insertStmt = db.prepare(`
   INSERT INTO submissions
     (id, created_at, consent_given,
      scoop_1_pct, scoop_2_pct, scoop_3_pct, scoop_4_pct, scoop_5_pct,
-     ice_cream_affinity, flavor_preference, max_price_usd, currency,
+     ice_cream_affinity, flavor_preference, max_price_usd, max_price_original, currency,
      age_bucket, gender, country, is_likely_bot)
   VALUES
     (@id, @created_at, 1,
      @scoop_1_pct, @scoop_2_pct, @scoop_3_pct, @scoop_4_pct, @scoop_5_pct,
-     @ice_cream_affinity, @flavor_preference, @max_price_usd, @currency,
+     @ice_cream_affinity, @flavor_preference, @max_price_usd, @max_price_original, @currency,
      @age_bucket, @gender, @country, @is_likely_bot)
 `);
 
-export function createSubmission({ answers, affinity, flavor, maxPrice, currency, ageBucket, gender, country }) {
+export function createSubmission({ answers, affinity, flavor, maxPrice, maxPriceOriginal, currency, ageBucket, gender, country }) {
   const id = randomUUID();
   const scoops = answers.map(Number);
+  const validCurrency = maxPrice != null && VALID_CURRENCIES.has(currency) ? currency : null;
   insertStmt.run({
     id,
     created_at: todayISO(),
@@ -75,10 +78,11 @@ export function createSubmission({ answers, affinity, flavor, maxPrice, currency
     scoop_3_pct: scoops[2],
     scoop_4_pct: scoops[3],
     scoop_5_pct: scoops[4],
-    ice_cream_affinity: affinity ?? null,
-    flavor_preference:  flavor  ?? null,
-    max_price_usd:      maxPrice != null ? Number(maxPrice) : null,
-    currency:           maxPrice != null && VALID_CURRENCIES.has(currency) ? currency : null,
+    ice_cream_affinity:  affinity         ?? null,
+    flavor_preference:   flavor           ?? null,
+    max_price_usd:       maxPrice         ?? null,
+    max_price_original:  maxPriceOriginal ?? null,
+    currency:            validCurrency,
     age_bucket: ageBucket ?? null,
     gender:     gender    ?? null,
     country:    country   ?? null,
