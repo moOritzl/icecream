@@ -17,9 +17,9 @@ export default function OptionalGate() {
           <div className="eyebrow" style={{ color: 'var(--strawberry-700)', marginTop: 16 }}>OPTIONAL</div>
           <h1 style={{ fontSize: 'clamp(36px, 5vw, 56px)', margin: '12px 0 6px' }}>The cherry on&nbsp;top.</h1>
           <p style={{ fontSize: 17, color: 'var(--ink-700)', margin: '0 auto', maxWidth: 460, lineHeight: 1.55 }}>
-            You've completed the main study. The next three questions help us
-            slice the data by flavor preference and price sensitivity — they're
-            useful but not required. Up to you.
+            You've completed the main study. The next four questions help us
+            slice the data by flavor preference, price sensitivity, and rough
+            demographics — they're useful but not required. Up to you.
           </p>
 
           <div style={{
@@ -31,8 +31,8 @@ export default function OptionalGate() {
           }} />
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <button className="btn btn-ghost" onClick={() => navigate('/q/8')}>Skip →</button>
-            <button className="btn btn-primary" onClick={() => navigate('/q/6')}>Three more questions →</button>
+            <button className="btn btn-ghost" onClick={() => navigate('/q/9')}>Skip →</button>
+            <button className="btn btn-primary" onClick={() => navigate('/q/6')}>Four more questions →</button>
           </div>
 
           <div className="caption" style={{ marginTop: 20 }}>

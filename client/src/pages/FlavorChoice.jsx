@@ -101,7 +101,7 @@ export default function FlavorChoice() {
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
           </div>
-          <div className="eyebrow">QUESTION 2 OF 3 · OPTIONAL</div>
+          <div className="eyebrow">QUESTION 2 OF 4 · OPTIONAL</div>
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 640, margin: '0 auto', width: '100%' }}>

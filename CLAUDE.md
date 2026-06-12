@@ -34,10 +34,10 @@ node -e "require('bcryptjs').hash('yourpassword', 12).then(console.log)"
 **Client** (`client/src/`):
 - `main.jsx` — entry; wraps app in `BrowserRouter` + `SurveyProvider`
 - `App.jsx` — React Router v7 routes + `AnimatePresence` (Framer Motion)
-- `SurveyContext.jsx` — survey state (answers, affinity, flavor, maxPrice) persisted to `sessionStorage`; cleared after submit
+- `SurveyContext.jsx` — survey state (answers, affinity, flavor, maxPrice, ageBucket, gender) persisted to `sessionStorage`; cleared after submit
 - `hooks/useDirection.js` — tracks forward/back navigation direction for transition animations
 - `components/` — `ScoopSlider`, `CurveChart`, `ScoopCone`, `Glyph`, `ProgressDots`, `MotionPage`, `PageShell`, `ThankYouMark`
-- `pages/` — `Landing`, `Consent`, `ScoopQuestion` (Q1–Q5), `OptionalGate`, `DessertAffinity` (Q6), `FlavorChoice` (Q7), `PriceQuestion` (Q8 + submit), `Thanks`, `Privacy`; `admin/Login`, `admin/Dashboard`
+- `pages/` — `Landing`, `Consent`, `ScoopQuestion` (Q1–Q5), `OptionalGate`, `DessertAffinity` (Q6), `FlavorChoice` (Q7), `Demographics` (Q8), `PriceQuestion` (Q9 + submit), `Thanks`, `Privacy`; `admin/Login`, `admin/Dashboard`
 - `styles/tokens.css` — design tokens (copy of `design/Icecream/tokens.css`)
 - `styles/app.css` — all component styles
 
@@ -58,7 +58,8 @@ node -e "require('bcryptjs').hash('yourpassword', 12).then(console.log)"
 /optional   OptionalGate (cherry-on-top interstitial)
 /q/6        DessertAffinity (Likert 1–10)
 /q/7        FlavorChoice (radio grid)
-/q/8        PriceQuestion (numeric USD; triggers POST /api/submit on confirm)
+/q/8        Demographics (optional age bucket + gender chips)
+/q/9        PriceQuestion (numeric USD; triggers POST /api/submit on confirm)
 /thanks/:token  Thank you + dual-curve SVG comparison chart
 /privacy    Privacy policy + delete-by-token form
 /admin      Admin dashboard (protected)

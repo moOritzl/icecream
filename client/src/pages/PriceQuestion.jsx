@@ -14,7 +14,7 @@ const CURRENCIES = {
 export default function PriceQuestion() {
   const navigate = useNavigate();
   const direction = useDirection();
-  const { maxPrice, answers, affinity, flavor, update, reset } = useSurvey();
+  const { maxPrice, answers, affinity, flavor, ageBucket, gender, update, reset } = useSurvey();
   const [raw, setRaw] = useState(maxPrice != null ? String(maxPrice) : '');
   const [currency, setCurrency] = useState('EUR');
   const [submitting, setSubmitting] = useState(false);
@@ -43,6 +43,8 @@ export default function PriceQuestion() {
         flavor,
         maxPrice: price,
         currency: price != null ? currency : null,
+        ageBucket,
+        gender,
       };
       const res = await fetch('/api/submit', {
         method: 'POST',
@@ -77,7 +79,7 @@ export default function PriceQuestion() {
             <ScoopCone size={28} scoops={1} />
             <span className="mono" style={{ fontSize: 12, color: 'var(--ink-700)' }}>scoops.lenhard.xyz</span>
           </div>
-          <div className="eyebrow">QUESTION 3 OF 3 · OPTIONAL</div>
+          <div className="eyebrow">QUESTION 4 OF 4 · OPTIONAL</div>
         </header>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 560, margin: '0 auto', width: '100%' }}>
@@ -149,7 +151,7 @@ export default function PriceQuestion() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48 }}>
-            <button className="btn btn-quiet" onClick={() => navigate('/q/7')} disabled={submitting}>← back</button>
+            <button className="btn btn-quiet" onClick={() => navigate('/q/8')} disabled={submitting}>← back</button>
             <div style={{ display: 'flex', gap: 8 }}>
               <button className="btn btn-ghost" onClick={handleSkip} disabled={submitting}>Skip</button>
               <button className="btn btn-primary" onClick={handleSubmit} disabled={submitting || (raw !== '' && !isValid)}>

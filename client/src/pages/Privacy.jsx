@@ -40,11 +40,12 @@ export default function Privacy() {
 
           <div style={{ fontSize: 15, color: 'var(--ink-700)', lineHeight: 1.7 }}>
             <p><b>What we collect:</b> your five slider answers, optional dessert-affinity rating,
-            optional flavor preference, optional price estimate, and an anonymous UUID we generate
-            server-side. That's it.</p>
+            optional flavor preference, optional price estimate, optional age bracket and gender,
+            and an anonymous UUID we generate server-side. That's it.</p>
 
             <p><b>What we don't collect:</b> your IP address (stripped before any data is written),
-            your name, your email, or any identifying metadata. We set no cookies on public routes.</p>
+            your name, your email, your exact age or birthdate (only a broad bracket, if you choose
+            to share it), or any identifying metadata. We set no cookies on public routes.</p>
 
             <p><b>How we use it:</b> to study how scoop count affects enjoyment. Results will
             be published in aggregate only — never raw individual responses.</p>

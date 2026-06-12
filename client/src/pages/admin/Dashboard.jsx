@@ -33,6 +33,18 @@ function FlavorPill({ flavor }) {
   );
 }
 
+const GENDER_LABELS = {
+  woman:         'woman',
+  man:           'man',
+  nonbinary:     'non-binary',
+  self_describe: 'self-desc.',
+};
+
+function Demo({ value }) {
+  if (!value) return <span style={{ color: 'var(--ink-300)' }}>—</span>;
+  return <span style={{ color: 'var(--ink-700)', whiteSpace: 'nowrap' }}>{value}</span>;
+}
+
 function StatCard({ label, value, sub, accent }) {
   return (
     <div className="card" style={{
@@ -138,7 +150,7 @@ function SubmissionsTable({ submissions, onDelete }) {
       <table style={{ width: '100%', fontFamily: 'var(--font-mono)', fontSize: 12, borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ borderBottom: '1px solid var(--vanilla-200)' }}>
-            {['id', 'date', 'q1', 'q2', 'q3', 'q4', 'q5', 'affinity', 'flavor', 'original', 'usd', ''].map((h, i) => (
+            {['id', 'date', 'q1', 'q2', 'q3', 'q4', 'q5', 'affinity', 'flavor', 'age', 'gender', 'original', 'usd', ''].map((h, i) => (
               <th key={i} style={{
                 padding: '8px 10px',
                 fontWeight: 500,
@@ -173,6 +185,8 @@ function SubmissionsTable({ submissions, onDelete }) {
               <td style={{ padding: '10px 10px', color: 'var(--ink-700)' }}>{s.scoop_5_pct}</td>
               <td style={{ padding: '10px 10px', color: 'var(--ink-700)' }}>{s.ice_cream_affinity ?? '—'}</td>
               <td style={{ padding: '10px 10px' }}><FlavorPill flavor={s.flavor_preference} /></td>
+              <td style={{ padding: '10px 10px' }}><Demo value={s.age_bucket} /></td>
+              <td style={{ padding: '10px 10px' }}><Demo value={GENDER_LABELS[s.gender] ?? s.gender} /></td>
               <td style={{ padding: '10px 10px', color: 'var(--ink-700)' }}>
                 {s.max_price_original != null ? `${s.max_price_original} ${s.currency ?? ''}`.trim() : '—'}
               </td>
@@ -200,7 +214,7 @@ function SubmissionsTable({ submissions, onDelete }) {
           ))}
           {submissions.length === 0 && (
             <tr>
-              <td colSpan={12} style={{ padding: '32px 10px', color: 'var(--ink-300)', textAlign: 'center', fontFamily: 'var(--font-body)' }}>
+              <td colSpan={14} style={{ padding: '32px 10px', color: 'var(--ink-300)', textAlign: 'center', fontFamily: 'var(--font-body)' }}>
                 No submissions yet
               </td>
             </tr>

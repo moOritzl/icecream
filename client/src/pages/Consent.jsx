@@ -42,8 +42,8 @@ export default function Consent() {
           </p>
 
           <ul style={{ listStyle: 'none', padding: 0, margin: '28px 0 0', borderBottom: '1px solid var(--vanilla-200)' }}>
-            <Bullet><b>It takes about 90 seconds.</b> Five slider questions, plus three optional ones at the end.</Bullet>
-            <Bullet><b>We store nothing identifying.</b> No email, no IP, no cookies. Just your slider answers and an anonymous ID.</Bullet>
+            <Bullet><b>It takes about 90 seconds.</b> Five slider questions, plus four optional ones at the end.</Bullet>
+            <Bullet><b>We store nothing identifying.</b> No email, no IP, no cookies. Just your answers — including an optional age bracket and gender — and an anonymous ID.</Bullet>
             <Bullet><b>You can leave any time.</b> Close the tab and nothing is saved until you click "submit."</Bullet>
             <Bullet><b>You can delete your data later.</b> We'll give you a one-time deletion token at the end. Hold onto it.</Bullet>
             <Bullet><b>Results may be published</b> in aggregate, in academic and popular venues. Never the raw responses.</Bullet>

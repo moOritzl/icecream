@@ -7,6 +7,7 @@ import ScoopSurvey from './pages/ScoopSurvey.jsx';
 import OptionalGate from './pages/OptionalGate.jsx';
 import DessertAffinity from './pages/DessertAffinity.jsx';
 import FlavorChoice from './pages/FlavorChoice.jsx';
+import Demographics from './pages/Demographics.jsx';
 import PriceQuestion from './pages/PriceQuestion.jsx';
 import Thanks from './pages/Thanks.jsx';
 import Privacy from './pages/Privacy.jsx';
@@ -35,7 +36,8 @@ export default function App() {
       {/* Specific optional-question routes ranked above :step wildcard */}
       <Route path="/q/6" element={<DessertAffinity />} />
       <Route path="/q/7" element={<FlavorChoice />} />
-      <Route path="/q/8" element={<PriceQuestion />} />
+      <Route path="/q/8" element={<Demographics />} />
+      <Route path="/q/9" element={<PriceQuestion />} />
       <Route path="/q/scoop" element={<ScoopSurvey />} />
       <Route path="/optional" element={<OptionalGate />} />
       <Route path="/thanks/:token" element={<Thanks />} />
